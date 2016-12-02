@@ -1,0 +1,4113 @@
+2011结果集命名：
+1）2011年申请项目与2008、2009、2010年批准项目间查询；
+q11_z080910_2011
+2）2011年申请项目与2010、2009年未获资助项目间查询；
+q11_w0910_2011
+3）2008-2010年批准项目间的查询。
+z080910_2011
+4）2011 跨学部申请项目查询
+k11_2011
+4）2011与2009、2010年 跨学部批准项目查询
+k11_z0910_2011
+
+drop tablespace ts_xm_full;
+create tablespace ts_xm_full
+DATAFILE 'D:\oracle\product\10.2.0\oradata\TGJ\ts_xm_full.DBF' 
+SIZE 32M 
+AUTOEXTEND ON 
+NEXT 32M MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL;
+
+
+
+--drop table xmcc.tb_fullxm;
+--create table xmcc.tb_fullxm
+--(
+--  XMIDNT NUMBER(12) not null,
+--  SHOULI VARCHAR2(12) NOT NULL,
+--  XMFULL CLOB
+--)
+--compress
+--tablespace  ts_xm_full;
+--ALTER TABLE xmcc.tb_fullxm ADD (
+--  PRIMARY KEY
+--(SHOULI)); 
+
+Drop table xmcc.Tb_PersonSQ_Info;
+create table xmcc.Tb_PersonSQ_Info
+(
+  RYIDNT NUMBER(10) NOT NULL,
+  SHOULI VARCHAR2(12) NOT NULL,
+  RYNAME VARCHAR2(100), --濮撳悕
+  RYMINZ VARCHAR2(10), --姘戞棌
+  RYSEXX VARCHAR2(10),  --鎬у埆
+  RYCSRQ VARCHAR2(100), --鍑虹敓鏃ユ湡
+  RYGJDQ VARCHAR2(100), --鍥藉埆
+  RYZJLX VARCHAR2(100), --璇佷欢绫诲瀷
+  RYZJHM VARCHAR2(100), --璇佷欢鍙风爜
+  RYYJLY VARCHAR2(500),--鐮旂┒棰嗗煙
+  RYZHIC VARCHAR2(100), --鑱岀О
+  RYXUEW VARCHAR2(100), --瀛︿綅
+  RYLOUX VARCHAR2(100),--閭
+  RYDWBH VARCHAR2(100),--鍗曚綅浠ｇ爜
+  RYGZDW VARCHAR2(100),--宸ヤ綔鍗曚綅鍚嶇О
+  RYSZYX VARCHAR2(150),--鎵�湪瀛﹂櫌
+  RYPZBH VARCHAR2(100),--鍦ㄧ爺鎵瑰噯缂栧彿
+  RYSXBH VARCHAR2(100) --鏈�啛鎮変唬鐮�
+);
+
+ALTER TABLE xmcc.Tb_PersonSQ_Info ADD (
+  PRIMARY KEY
+ (RYIDNT)); 
+
+drop sequence xmcc.Seq_PersonSQ_Info;
+create sequence xmcc.Seq_PersonSQ_Info 
+nocycle
+maxvalue 9999999999
+start with 1;
+
+CREATE TRIGGER TRG_PersonSQ BEFORE
+INSERT  ON Tb_PersonSQ_Info
+FOR EACH ROW begin
+   SELECT Seq_PersonSQ_Info.NEXTVAL
+     INTO :NEW.RYIDNT
+     FROM DUAL;
+End TRG_PersonSQ; 
+/
+
+Drop table xmcc.Tb_PersonCJ_Info;
+create table xmcc.Tb_PersonCJ_Info
+(
+  RYIDNT NUMBER(10) NOT NULL,
+  SHOULI VARCHAR2(12) NOT NULL,
+  RYNAME VARCHAR2(100), --濮撳悕
+  RYMINZ VARCHAR2(10), --姘戞棌
+  RYSEXX VARCHAR2(10),  --鎬у埆
+  RYCSRQ VARCHAR2(100), --鍑虹敓鏃ユ湡
+  RYGJDQ VARCHAR2(100), --鍥藉埆
+  RYZJLX VARCHAR2(100), --璇佷欢绫诲瀷
+  RYZJHM VARCHAR2(100), --璇佷欢鍙风爜
+  RYYJLY VARCHAR2(500),--鐮旂┒棰嗗煙
+  RYZHIC VARCHAR2(100), --鑱岀О
+  RYXUEW VARCHAR2(100), --瀛︿綅
+  RYLOUX VARCHAR2(100),--閭
+  RYDWBH VARCHAR2(100),--鍗曚綅浠ｇ爜
+  RYGZDW VARCHAR2(100),--宸ヤ綔鍗曚綅鍚嶇О
+  RYSZYX VARCHAR2(100),--鎵�湪瀛﹂櫌
+  RYPZBH VARCHAR2(100),--鍦ㄧ爺鎵瑰噯缂栧彿
+  RYSXBH VARCHAR2(100) --鏈�啛鎮変唬鐮�
+);
+ALTER TABLE xmcc.Tb_PersonCJ_Info ADD (
+  PRIMARY KEY
+ (RYIDNT));
+
+drop sequence xmcc.Seq_PersonCJ_Info;
+create sequence xmcc.Seq_PersonCJ_Info
+nocycle
+maxvalue 9999999999
+start with 1;
+
+CREATE TRIGGER TRG_PersonCJ BEFORE
+INSERT  ON Tb_PersonCJ_Info
+FOR EACH ROW begin
+   SELECT Seq_PersonCJ_Info.NEXTVAL
+     INTO :NEW.RYIDNT
+     FROM DUAL;
+End TRG_PersonCJ; 
+
+
+  -- Create table
+create table xmcc.TB_SENXM_XSL
+(
+  XSLAID NUMBER(12) not null,
+  XSLBID NUMBER(12) not null,
+  AXKDM  VARCHAR2(100),
+  BXKDM  VARCHAR2(100),
+  AZZLB  VARCHAR2(40),
+  BZZLB  VARCHAR2(40),
+  ATITLE VARCHAR2(150),
+  BTITLE VARCHAR2(150),
+  AAUAR  VARCHAR2(40),
+  BAUAR  VARCHAR2(40),
+  ADANW  VARCHAR2(100),
+  BDANW  VARCHAR2(100),
+  AYEAR  VARCHAR2(50),
+  BYEAR  VARCHAR2(50),
+  ASENNO NUMBER(4) not null,
+  BSENNO NUMBER(4) not null,
+  SAMSEN VARCHAR2(4000),
+  XSLCNT NUMBER(6,4) default 0.0
+)
+tablespace XMCC_DATA
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table xmcc.TB_SENXM_XSL
+  add primary key (XSLAID, XSLBID, ASENNO, BSENNO)
+  using index 
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate indexes 
+create index xmcc.SENXM_INDEX_AID on xmcc.TB_SENXM_XSL (XSLAID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index xmcc.SENXM_INDEX_BID on xmcc.TB_SENXM_XSL (XSLBID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  
+  -- Create table
+create table xmcc.TB_SHGXM_INFO
+(
+  XMIDNT   NUMBER(12) not null,
+  SHOULI   VARCHAR2(12) not null,
+  PIZHUN   VARCHAR2(12),
+  XMXKDM   VARCHAR2(100),
+  XMXKDM2  VARCHAR2(100),
+  XMYJNX   VARCHAR2(32),
+  XMYJSX   VARCHAR2(32),
+  SBXKDM   VARCHAR2(10),
+  SBXKDM2  VARCHAR2(10),
+  XMYEAR   VARCHAR2(50),
+  XMTITL   VARCHAR2(150),
+  XMKYWD   VARCHAR2(260),
+  XMABST   VARCHAR2(2000),
+  XMAUAR   VARCHAR2(40),
+  XMDANW   VARCHAR2(100),
+  XMZZLB   VARCHAR2(40),
+  MAXXSL   NUMBER(6,4) default 0.0,
+  XMNEED   CLOB,
+  XMOPTN   CLOB,
+  SGTIKY   VARCHAR2(500),
+  SGNEED   CLOB,
+  SGTHRE   CLOB,
+  SGFOUR   CLOB,
+  XMFULL   CLOB,
+  STAEXT   VARCHAR2(10),
+  STATIT   VARCHAR2(10),
+  STACLU   VARCHAR2(10),
+  STASHG   VARCHAR2(10),
+  STAMUT   VARCHAR2(10),
+  STAIND   VARCHAR2(10),
+  XMSTAT   VARCHAR2(10) default '00',
+  TONGJI   VARCHAR2(10),
+  XMEDU    VARCHAR2(32),
+  FULLFLAG VARCHAR2(10),
+  MINVAL   CLOB,
+  BITVAL   CLOB,
+  STACLU2  VARCHAR2(10) default '00'
+)
+partition by list (SBXKDM)
+(
+  partition A01 values ('A01')
+    tablespace TS_A01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A02 values ('A02')
+    tablespace TS_A02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A03 values ('A03')
+    tablespace TS_A03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A04 values ('A04')
+    tablespace TS_A04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A05 values ('A05')
+    tablespace TS_A05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A06 values ('A06')
+    tablespace TS_A06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A07 values ('A07')
+    tablespace TS_A07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A08 values ('A08')
+    tablespace TS_A08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A09 values ('A09')
+    tablespace TS_A09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A10 values ('A10')
+    tablespace TS_A10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B01 values ('B01')
+    tablespace TS_B01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B02 values ('B02')
+    tablespace TS_B02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B03 values ('B03')
+    tablespace TS_B03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B04 values ('B04')
+    tablespace TS_B04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B05 values ('B05')
+    tablespace TS_B05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B06 values ('B06')
+    tablespace TS_B06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B07 values ('B07')
+    tablespace TS_B07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C01 values ('C01')
+    tablespace TS_C01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C02 values ('C02')
+    tablespace TS_C02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C03 values ('C03')
+    tablespace TS_C03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C04 values ('C04')
+    tablespace TS_C04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C05 values ('C05')
+    tablespace TS_C05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C06 values ('C06')
+    tablespace TS_C06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C07 values ('C07')
+    tablespace TS_C07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C08 values ('C08')
+    tablespace TS_C08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C09 values ('C09')
+    tablespace TS_C09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C10 values ('C10')
+    tablespace TS_C10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C11 values ('C11')
+    tablespace TS_C11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C12 values ('C12')
+    tablespace TS_C12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C13 values ('C13')
+    tablespace TS_C13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C14 values ('C14')
+    tablespace TS_C14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C15 values ('C15')
+    tablespace TS_C15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C16 values ('C16')
+    tablespace TS_C16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C17 values ('C17')
+    tablespace TS_C17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C18 values ('C18')
+    tablespace TS_C18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C19 values ('C19')
+    tablespace TS_C19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C20 values ('C20')
+    tablespace TS_C20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C21 values ('C21')
+    tablespace TS_C21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D01 values ('D01')
+    tablespace TS_D01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D02 values ('D02')
+    tablespace TS_D02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D03 values ('D03')
+    tablespace TS_D03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D04 values ('D04')
+    tablespace TS_D04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D05 values ('D05')
+    tablespace TS_D05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D06 values ('D06')
+    tablespace TS_D06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D07 values ('D07')
+    tablespace TS_D07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E01 values ('E01')
+    tablespace TS_E01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E02 values ('E02')
+    tablespace TS_E02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E03 values ('E03')
+    tablespace TS_E03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E04 values ('E04')
+    tablespace TS_E04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E05 values ('E05')
+    tablespace TS_E05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E06 values ('E06')
+    tablespace TS_E06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E07 values ('E07')
+    tablespace TS_E07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E08 values ('E08')
+    tablespace TS_E08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E09 values ('E09')
+    tablespace TS_E09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F01 values ('F01')
+    tablespace TS_F01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F02 values ('F02')
+    tablespace TS_F02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F03 values ('F03')
+    tablespace TS_F03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F04 values ('F04')
+    tablespace TS_F04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F05 values ('F05')
+    tablespace TS_F05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F06 values ('F06')
+    tablespace TS_F06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F07 values ('F07')
+    tablespace TS_F07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G01 values ('G01')
+    tablespace TS_G01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G02 values ('G02')
+    tablespace TS_G02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G03 values ('G03')
+    tablespace TS_G03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G04 values ('G04')
+    tablespace TS_G04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G05 values ('G05')
+    tablespace TS_G05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G06 values ('G06')
+    tablespace TS_G06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G07 values ('G07')
+    tablespace TS_G07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H01 values ('H01')
+    tablespace TS_H01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H02 values ('H02')
+    tablespace TS_H02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H03 values ('H03')
+    tablespace TS_H03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H04 values ('H04')
+    tablespace TS_H04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H05 values ('H05')
+    tablespace TS_H05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H06 values ('H06')
+    tablespace TS_H06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H07 values ('H07')
+    tablespace TS_H07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H08 values ('H08')
+    tablespace TS_H08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H09 values ('H09')
+    tablespace TS_H09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H10 values ('H10')
+    tablespace TS_H10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H11 values ('H11')
+    tablespace TS_H11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H12 values ('H12')
+    tablespace TS_H12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H13 values ('H13')
+    tablespace TS_H13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H14 values ('H14')
+    tablespace TS_H14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H15 values ('H15')
+    tablespace TS_H15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H16 values ('H16')
+    tablespace TS_H16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H17 values ('H17')
+    tablespace TS_H17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H18 values ('H18')
+    tablespace TS_H18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H19 values ('H19')
+    tablespace TS_H19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H20 values ('H20')
+    tablespace TS_H20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H21 values ('H21')
+    tablespace TS_H21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H22 values ('H22')
+    tablespace TS_H22
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H23 values ('H23')
+    tablespace TS_H23
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H24 values ('H24')
+    tablespace TS_H24
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H25 values ('H25')
+    tablespace TS_H25
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H26 values ('H26')
+    tablespace TS_H26
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H27 values ('H27')
+    tablespace TS_H27
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H28 values ('H28')
+    tablespace TS_H28
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H29 values ('H29')
+    tablespace TS_H29
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H30 values ('H30')
+    tablespace TS_H30
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H31 values ('H31')
+    tablespace TS_H31
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H32 values ('H32')
+    tablespace TS_H32
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H33 values ('H33')
+    tablespace TS_H33
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H34 values ('H34')
+    tablespace TS_H34
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition Z0 values (default)
+    tablespace XMCC_DATA
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    )
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table xmcc.TB_SHGXM_INFO
+  add primary key (XMIDNT)
+  using index 
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  
+  -- Create table
+create table xmcc.TB_SHGXM_XSL
+(
+  XSLAID  NUMBER(12) not null,
+  XSLBID  NUMBER(12) not null,
+  SBXKDM  VARCHAR2(100),
+  AXKDM   VARCHAR2(100),
+  BXKDM   VARCHAR2(100),
+  AZZLB   VARCHAR2(40),
+  BZZLB   VARCHAR2(40),
+  ATITLE  VARCHAR2(150),
+  BTITLE  VARCHAR2(150),
+  AAUAR   VARCHAR2(40),
+  BAUAR   VARCHAR2(40),
+  ADANW   VARCHAR2(100),
+  BDANW   VARCHAR2(100),
+  AXMKYWD VARCHAR2(300),
+  BXMKYWD VARCHAR2(300),
+  XSLNED  VARCHAR2(50),
+  XSLOPN  VARCHAR2(50),
+  XSLCNT  NUMBER(6,4) default 0.0,
+  XSLTHR  NUMBER(6,4),
+  XSLFOU  NUMBER(6,4),
+  XSLALL  NUMBER(6,4),
+  NUMSAM  NUMBER(7),
+  SAMSHG  CLOB,
+  XSLSTA  VARCHAR2(10),
+  FORSHG  CLOB,
+  THRSHG  CLOB,
+  AYEAR   VARCHAR2(16),
+  BYEAR   VARCHAR2(16),
+  AYJNX   VARCHAR2(16),
+  BYJNX   VARCHAR2(16),
+  AEDU    VARCHAR2(32),
+  BEDU    VARCHAR2(32),
+  APIZHUN VARCHAR2(12),
+  BPIZHUN VARCHAR2(12),
+  SAMNAM  VARCHAR2(10) default '00',
+  SAMDW   VARCHAR2(10) default '00',
+  SAMYEAR VARCHAR2(10) default '00',
+  ANEED   CLOB,
+  BNEED   CLOB,
+  ASGNEED CLOB,
+  BSGNEED CLOB,
+  AFULL   CLOB,
+  BFULL   CLOB,
+  XSLWISE NUMBER(6,4) default 0.0
+)
+partition by list (SBXKDM)
+(
+  partition A01 values ('A01')
+    tablespace TS_A01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A02 values ('A02')
+    tablespace TS_A02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A03 values ('A03')
+    tablespace TS_A03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A04 values ('A04')
+    tablespace TS_A04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A05 values ('A05')
+    tablespace TS_A05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A06 values ('A06')
+    tablespace TS_A06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A07 values ('A07')
+    tablespace TS_A07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A08 values ('A08')
+    tablespace TS_A08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A09 values ('A09')
+    tablespace TS_A09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A10 values ('A10')
+    tablespace TS_A10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B01 values ('B01')
+    tablespace TS_B01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B02 values ('B02')
+    tablespace TS_B02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B03 values ('B03')
+    tablespace TS_B03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B04 values ('B04')
+    tablespace TS_B04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B05 values ('B05')
+    tablespace TS_B05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B06 values ('B06')
+    tablespace TS_B06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B07 values ('B07')
+    tablespace TS_B07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C01 values ('C01')
+    tablespace TS_C01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C02 values ('C02')
+    tablespace TS_C02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C03 values ('C03')
+    tablespace TS_C03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C04 values ('C04')
+    tablespace TS_C04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C05 values ('C05')
+    tablespace TS_C05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C06 values ('C06')
+    tablespace TS_C06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C07 values ('C07')
+    tablespace TS_C07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C08 values ('C08')
+    tablespace TS_C08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C09 values ('C09')
+    tablespace TS_C09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C10 values ('C10')
+    tablespace TS_C10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C11 values ('C11')
+    tablespace TS_C11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C12 values ('C12')
+    tablespace TS_C12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C13 values ('C13')
+    tablespace TS_C13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C14 values ('C14')
+    tablespace TS_C14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C15 values ('C15')
+    tablespace TS_C15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C16 values ('C16')
+    tablespace TS_C16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C17 values ('C17')
+    tablespace TS_C17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C18 values ('C18')
+    tablespace TS_C18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C19 values ('C19')
+    tablespace TS_C19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C20 values ('C20')
+    tablespace TS_C20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C21 values ('C21')
+    tablespace TS_C21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D01 values ('D01')
+    tablespace TS_D01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D02 values ('D02')
+    tablespace TS_D02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D03 values ('D03')
+    tablespace TS_D03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D04 values ('D04')
+    tablespace TS_D04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D05 values ('D05')
+    tablespace TS_D05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D06 values ('D06')
+    tablespace TS_D06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D07 values ('D07')
+    tablespace TS_D07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E01 values ('E01')
+    tablespace TS_E01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E02 values ('E02')
+    tablespace TS_E02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E03 values ('E03')
+    tablespace TS_E03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E04 values ('E04')
+    tablespace TS_E04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E05 values ('E05')
+    tablespace TS_E05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E06 values ('E06')
+    tablespace TS_E06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E07 values ('E07')
+    tablespace TS_E07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E08 values ('E08')
+    tablespace TS_E08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E09 values ('E09')
+    tablespace TS_E09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F01 values ('F01')
+    tablespace TS_F01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F02 values ('F02')
+    tablespace TS_F02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F03 values ('F03')
+    tablespace TS_F03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F04 values ('F04')
+    tablespace TS_F04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F05 values ('F05')
+    tablespace TS_F05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F06 values ('F06')
+    tablespace TS_F06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F07 values ('F07')
+    tablespace TS_F07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G01 values ('G01')
+    tablespace TS_G01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G02 values ('G02')
+    tablespace TS_G02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G03 values ('G03')
+    tablespace TS_G03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G04 values ('G04')
+    tablespace TS_G04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G05 values ('G05')
+    tablespace TS_G05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G06 values ('G06')
+    tablespace TS_G06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G07 values ('G07')
+    tablespace TS_G07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H01 values ('H01')
+    tablespace TS_H01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H02 values ('H02')
+    tablespace TS_H02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H03 values ('H03')
+    tablespace TS_H03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H04 values ('H04')
+    tablespace TS_H04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H05 values ('H05')
+    tablespace TS_H05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H06 values ('H06')
+    tablespace TS_H06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H07 values ('H07')
+    tablespace TS_H07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H08 values ('H08')
+    tablespace TS_H08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H09 values ('H09')
+    tablespace TS_H09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H10 values ('H10')
+    tablespace TS_H10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H11 values ('H11')
+    tablespace TS_H11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H12 values ('H12')
+    tablespace TS_H12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H13 values ('H13')
+    tablespace TS_H13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H14 values ('H14')
+    tablespace TS_H14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H15 values ('H15')
+    tablespace TS_H15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H16 values ('H16')
+    tablespace TS_H16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H17 values ('H17')
+    tablespace TS_H17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H18 values ('H18')
+    tablespace TS_H18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H19 values ('H19')
+    tablespace TS_H19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H20 values ('H20')
+    tablespace TS_H20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H21 values ('H21')
+    tablespace TS_H21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H22 values ('H22')
+    tablespace TS_H22
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H23 values ('H23')
+    tablespace TS_H23
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H24 values ('H24')
+    tablespace TS_H24
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H25 values ('H25')
+    tablespace TS_H25
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H26 values ('H26')
+    tablespace TS_H26
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H27 values ('H27')
+    tablespace TS_H27
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H28 values ('H28')
+    tablespace TS_H28
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H29 values ('H29')
+    tablespace TS_H29
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H30 values ('H30')
+    tablespace TS_H30
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H31 values ('H31')
+    tablespace TS_H31
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H32 values ('H32')
+    tablespace TS_H32
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H33 values ('H33')
+    tablespace TS_H33
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H34 values ('H34')
+    tablespace TS_H34
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition Z0 values (default)
+    tablespace XMCC_DATA
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    )
+);
+
+//////  杩樻病鍋�  //////////////////////////////////////////
+
+
+
+-- Create/Recreate indexes 
+create index IDX_XSL_AXKDM on TB_SHGXM_XSL (SUBSTR(AXKDM,0,3))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_AYEAR on TB_SHGXM_XSL (AYEAR)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_AZZLB on TB_SHGXM_XSL (AZZLB)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BXKDM on TB_SHGXM_XSL (SUBSTR(BXKDM,0,3))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BYEAR on TB_SHGXM_XSL (BYEAR)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BZZLB on TB_SHGXM_XSL (BZZLB)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_SAMDW on TB_SHGXM_XSL (SAMDW)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_SAMNAM on TB_SHGXM_XSL (SAMNAM)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLAID on TB_SHGXM_XSL (XSLAID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLBID on TB_SHGXM_XSL (XSLBID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLCNT on TB_SHGXM_XSL (XSLCNT)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLSTA on TB_SHGXM_XSL (SUBSTR(XSLSTA,0,1))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+ 
+ //////end   杩樻病鍋�  //////////////////////////////////////////
+ 
+  
+  -- Create table
+create table xmcc.TB_XMSHGPAIR
+(
+  XMIDNT NUMBER(12) not null,
+  SHGHSH VARCHAR2(100) not null,
+  XMXKDM VARCHAR2(100) not null
+)
+partition by list (XMXKDM)
+(
+  partition A01 values ('A01')
+    tablespace TS_A01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A02 values ('A02')
+    tablespace TS_A02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A03 values ('A03')
+    tablespace TS_A03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A04 values ('A04')
+    tablespace TS_A04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A05 values ('A05')
+    tablespace TS_A05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A06 values ('A06')
+    tablespace TS_A06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A07 values ('A07')
+    tablespace TS_A07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A08 values ('A08')
+    tablespace TS_A08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A09 values ('A09')
+    tablespace TS_A09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition A10 values ('A10')
+    tablespace TS_A10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B01 values ('B01')
+    tablespace TS_B01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B02 values ('B02')
+    tablespace TS_B02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B03 values ('B03')
+    tablespace TS_B03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B04 values ('B04')
+    tablespace TS_B04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B05 values ('B05')
+    tablespace TS_B05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B06 values ('B06')
+    tablespace TS_B06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition B07 values ('B07')
+    tablespace TS_B07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C01 values ('C01')
+    tablespace TS_C01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C02 values ('C02')
+    tablespace TS_C02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C03 values ('C03')
+    tablespace TS_C03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C04 values ('C04')
+    tablespace TS_C04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C05 values ('C05')
+    tablespace TS_C05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C06 values ('C06')
+    tablespace TS_C06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C07 values ('C07')
+    tablespace TS_C07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C08 values ('C08')
+    tablespace TS_C08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C09 values ('C09')
+    tablespace TS_C09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C10 values ('C10')
+    tablespace TS_C10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C11 values ('C11')
+    tablespace TS_C11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C12 values ('C12')
+    tablespace TS_C12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C13 values ('C13')
+    tablespace TS_C13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C14 values ('C14')
+    tablespace TS_C14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C15 values ('C15')
+    tablespace TS_C15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C16 values ('C16')
+    tablespace TS_C16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C17 values ('C17')
+    tablespace TS_C17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C18 values ('C18')
+    tablespace TS_C18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C19 values ('C19')
+    tablespace TS_C19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C20 values ('C20')
+    tablespace TS_C20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition C21 values ('C21')
+    tablespace TS_C21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D01 values ('D01')
+    tablespace TS_D01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D02 values ('D02')
+    tablespace TS_D02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D03 values ('D03')
+    tablespace TS_D03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D04 values ('D04')
+    tablespace TS_D04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D05 values ('D05')
+    tablespace TS_D05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D06 values ('D06')
+    tablespace TS_D06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition D07 values ('D07')
+    tablespace TS_D07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E01 values ('E01')
+    tablespace TS_E01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E02 values ('E02')
+    tablespace TS_E02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E03 values ('E03')
+    tablespace TS_E03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E04 values ('E04')
+    tablespace TS_E04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E05 values ('E05')
+    tablespace TS_E05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E06 values ('E06')
+    tablespace TS_E06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E07 values ('E07')
+    tablespace TS_E07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E08 values ('E08')
+    tablespace TS_E08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition E09 values ('E09')
+    tablespace TS_E09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F01 values ('F01')
+    tablespace TS_F01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F02 values ('F02')
+    tablespace TS_F02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F03 values ('F03')
+    tablespace TS_F03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F04 values ('F04')
+    tablespace TS_F04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F05 values ('F05')
+    tablespace TS_F05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F06 values ('F06')
+    tablespace TS_F06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition F07 values ('F07')
+    tablespace TS_F07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G01 values ('G01')
+    tablespace TS_G01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G02 values ('G02')
+    tablespace TS_G02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G03 values ('G03')
+    tablespace TS_G03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G04 values ('G04')
+    tablespace TS_G04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G05 values ('G05')
+    tablespace TS_G05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G06 values ('G06')
+    tablespace TS_G06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition G07 values ('G07')
+    tablespace TS_G07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H01 values ('H01')
+    tablespace TS_H01
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H02 values ('H02')
+    tablespace TS_H02
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H03 values ('H03')
+    tablespace TS_H03
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H04 values ('H04')
+    tablespace TS_H04
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H05 values ('H05')
+    tablespace TS_H05
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H06 values ('H06')
+    tablespace TS_H06
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H07 values ('H07')
+    tablespace TS_H07
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H08 values ('H08')
+    tablespace TS_H08
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H09 values ('H09')
+    tablespace TS_H09
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H10 values ('H10')
+    tablespace TS_H10
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H11 values ('H11')
+    tablespace TS_H11
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H12 values ('H12')
+    tablespace TS_H12
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H13 values ('H13')
+    tablespace TS_H13
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H14 values ('H14')
+    tablespace TS_H14
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H15 values ('H15')
+    tablespace TS_H15
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H16 values ('H16')
+    tablespace TS_H16
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H17 values ('H17')
+    tablespace TS_H17
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H18 values ('H18')
+    tablespace TS_H18
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H19 values ('H19')
+    tablespace TS_H19
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H20 values ('H20')
+    tablespace TS_H20
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H21 values ('H21')
+    tablespace TS_H21
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H22 values ('H22')
+    tablespace TS_H22
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H23 values ('H23')
+    tablespace TS_H23
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H24 values ('H24')
+    tablespace TS_H24
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H25 values ('H25')
+    tablespace TS_H25
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H26 values ('H26')
+    tablespace TS_H26
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H27 values ('H27')
+    tablespace TS_H27
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H28 values ('H28')
+    tablespace TS_H28
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H29 values ('H29')
+    tablespace TS_H29
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H30 values ('H30')
+    tablespace TS_H30
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H31 values ('H31')
+    tablespace TS_H31
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H32 values ('H32')
+    tablespace TS_H32
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H33 values ('H33')
+    tablespace TS_H33
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition H34 values ('H34')
+    tablespace TS_H34
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    ),
+  partition Z0 values (default)
+    tablespace XMCC_DATA
+    pctfree 10
+    initrans 1
+    maxtrans 255
+    storage
+    (
+      initial 64K
+      minextents 1
+      maxextents unlimited
+    )
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table xmcc.TB_XMSHGPAIR
+  add primary key (XMIDNT, SHGHSH, XMXKDM)
+  using index 
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  
+  -- Create table
+create table TB_WORD
+(
+  WORDS    VARCHAR2(40) not null,
+  TYPE     VARCHAR2(40),
+  STOP     VARCHAR2(40),
+  FREQ     VARCHAR2(100),
+  FREQ_INT NUMBER(10)
+)
+tablespace XMCC_DATA
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TB_WORD
+  add primary key (WORDS)
+  using index 
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  -- Create table
+create table TB_USER
+(
+  USERID   NUMBER not null,
+  NAME     VARCHAR2(20) not null,
+  PASSWORD VARCHAR2(20) not null,
+  RIGHT    VARCHAR2(200)
+)
+tablespace XMCC_DATA
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TB_USER
+  add constraint USERID primary key (USERID)
+  using index 
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  
+  
+  insert into q11_w0910_2011.TB_SHGXM_INFO(
+xmidnt,
+pizhun,
+sbxkdm,
+xmyear,
+sgtiky,
+staext,
+statit,
+staclu)
+
+select 
+
+xmidnt,
+pizhun,
+sbxkdm,
+xmyear,
+sgtiky,
+staext,
+statit,
+staclu
+
+from xmcc.TB_SHGXM_INFO t where 
+(
+(t.xmyear='2009' )
+and t.pizhun is null 
+)
+;
+
+insert into k11_z080910_2011.TB_SenXM_xsl(
+xslaid,
+xslbid,
+axkdm ,
+bxkdm ,
+azzlb ,
+bzzlb ,
+atitle,
+btitle,
+aauar ,
+bauar ,
+adanw ,
+bdanw ,
+ayear ,
+byear ,
+asenno,
+bsenno,
+samsen,
+xslcnt
+)
+select 
+
+xslaid,
+xslbid,
+axkdm ,
+bxkdm ,
+azzlb ,
+bzzlb ,
+atitle,
+btitle,
+aauar ,
+bauar ,
+adanw ,
+bdanw ,
+ayear ,
+byear ,
+asenno,
+bsenno,
+samsen,
+xslcnt
+
+from k11_2011.TB_SenXM_xsl t 
+;
+commit;
+
+insert into k11_z080910_2011.TB_ShgXM_xsl(
+xslaid ,
+xslbid ,
+sbxkdm ,
+axkdm  ,
+bxkdm  ,
+azzlb  ,
+bzzlb  ,
+atitle ,
+btitle ,
+aauar  ,
+bauar  ,
+adanw  ,
+bdanw  ,
+axmkywd,
+bxmkywd,
+xslned ,
+xslopn ,
+xslcnt ,
+xslthr ,
+xslfou ,
+xslall ,
+numsam ,
+samshg ,
+xslsta ,
+forshg ,
+thrshg ,
+ayear  ,
+byear  ,
+ayjnx  ,
+byjnx  ,
+aedu   ,
+bedu   ,
+apizhun,
+bpizhun,
+samnam ,
+samdw  ,
+samyear,
+aneed  ,
+bneed  ,
+asgneed,
+bsgneed,
+xslwise,
+checker,
+chesta 
+)      
+select 
+ xslaid ,
+xslbid ,
+sbxkdm ,
+axkdm  ,
+bxkdm  ,
+azzlb  ,
+bzzlb  ,
+atitle ,
+btitle ,
+aauar  ,
+bauar  ,
+adanw  ,
+bdanw  ,
+axmkywd,
+bxmkywd,
+xslned ,
+xslopn ,
+xslcnt ,
+xslthr ,
+xslfou ,
+xslall ,
+numsam ,
+samshg ,
+xslsta ,
+forshg ,
+thrshg ,
+ayear  ,
+byear  ,
+ayjnx  ,
+byjnx  ,
+aedu   ,
+bedu   ,
+apizhun,
+bpizhun,
+samnam ,
+samdw  ,
+samyear,
+aneed  ,
+bneed  ,
+asgneed,
+bsgneed,
+xslwise,
+checker,
+chesta 
+
+from k11_2011.TB_ShgXM_xsl t 
+;
+
+insert into k11_z080910_2011.tb_xmshgpair(
+xmidnt,
+shghsh,
+xmxkdm
+
+)      
+select 
+xmidnt,
+shghsh,
+xmxkdm
+
+from k11_2011.tb_xmshgpair t 
+;
+  

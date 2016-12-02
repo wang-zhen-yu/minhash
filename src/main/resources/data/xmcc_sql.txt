@@ -1,0 +1,763 @@
+﻿-Xmx768m -Xms768m -Xmn32m -Xss16m
+
+JAVA_HOME = E:\Java Tool\jdk1.6.0_06
+Path =  %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;d:\oracle\ora92\bin;
+ClassPath = .;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar;D:\oracle\ora92\jdbc\lib;
+
+CREATE TEMPORARY TABLESPACE xmcc_temp
+TEMPFILE 'D:\oracle\product\10.2.0\oradata\TGJ\xmcc_temp01.dbf'
+SIZE 32M
+AUTOEXTEND ON
+NEXT 32M MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL;
+
+CREATE TABLESPACE xmcc_data
+LOGGING
+DATAFILE 'D:\oracle\product\10.2.0\oradata\TGJ\xmcc_DATA01.DBF' 
+SIZE 32M 
+AUTOEXTEND ON 
+NEXT 32M MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL;
+
+CREATE USER xmcc IDENTIFIED BY xmccpwd
+DEFAULT TABLESPACE xmcc_DATA
+TEMPORARY TABLESPACE xmcc_TEMP;
+
+GRANT
+CREATE SESSION, CREATE ANY TABLE, CREATE ANY VIEW ,CREATE ANY INDEX, CREATE ANY PROCEDURE,
+ALTER ANY TABLE, ALTER ANY PROCEDURE,
+DROP ANY TABLE, DROP ANY VIEW, DROP ANY INDEX, DROP ANY PROCEDURE,
+SELECT ANY TABLE, INSERT ANY TABLE, UPDATE ANY TABLE, DELETE ANY TABLE
+TO xmcc;
+
+grant connect,resource,dba to xmcc;
+
+grant unlimited tablespace to xmcc;
+
+drop tablespace ts_xm_full;
+create tablespace ts_xm_full
+DATAFILE 'D:\oracle\product\10.2.0\oradata\TGJ\ts_xm_full.DBF' 
+SIZE 32M 
+AUTOEXTEND ON 
+NEXT 32M MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL;
+
+
+
+--drop table xmcc.tb_fullxm;
+--create table xmcc.tb_fullxm
+--(
+--  XMIDNT NUMBER(12) not null,
+--  SHOULI VARCHAR2(12) NOT NULL,
+--  XMFULL CLOB
+--)
+--compress
+--tablespace  ts_xm_full;
+--ALTER TABLE xmcc.tb_fullxm ADD (
+--  PRIMARY KEY
+--(SHOULI)); 
+
+Drop table xmcc.Tb_PersonSQ_Info;
+create table xmcc.Tb_PersonSQ_Info
+(
+  RYIDNT NUMBER(10) NOT NULL,
+  SHOULI VARCHAR2(12) NOT NULL,
+  RYNAME VARCHAR2(100), --姓名
+  RYMINZ VARCHAR2(10), --民族
+  RYSEXX VARCHAR2(10),  --性别
+  RYCSRQ VARCHAR2(100), --出生日期
+  RYGJDQ VARCHAR2(100), --国别
+  RYZJLX VARCHAR2(100), --证件类型
+  RYZJHM VARCHAR2(100), --证件号码
+  RYYJLY VARCHAR2(500),--研究领域
+  RYZHIC VARCHAR2(100), --职称
+  RYXUEW VARCHAR2(100), --学位
+  RYLOUX VARCHAR2(100),--邮箱
+  RYDWBH VARCHAR2(100),--单位代码
+  RYGZDW VARCHAR2(100),--工作单位名称
+  RYSZYX VARCHAR2(150),--所在学院
+  RYPZBH VARCHAR2(100),--在研批准编号
+  RYSXBH VARCHAR2(100) --最熟悉代码
+);
+
+ALTER TABLE xmcc.Tb_PersonSQ_Info ADD (
+  PRIMARY KEY
+ (RYIDNT)); 
+
+///////////////////////////////////////////////////// 还没做 
+drop sequence xmcc.Seq_PersonSQ_Info;
+create sequence xmcc.Seq_PersonSQ_Info 
+nocycle
+maxvalue 9999999999
+start with 308086;
+
+CREATE TRIGGER TRG_PersonSQ BEFORE
+INSERT  ON Tb_PersonSQ_Info
+FOR EACH ROW begin
+   SELECT Seq_PersonSQ_Info.NEXTVAL
+     INTO :NEW.RYIDNT
+     FROM DUAL;
+End TRG_PersonSQ; 
+/
+///////////////////////////////////////////////////// end 还没做 
+
+Drop table xmcc.Tb_PersonCJ_Info;
+create table xmcc.Tb_PersonCJ_Info
+(
+  RYIDNT NUMBER(10) NOT NULL,
+  SHOULI VARCHAR2(12) NOT NULL,
+  RYNAME VARCHAR2(100), --姓名
+  RYMINZ VARCHAR2(10), --民族
+  RYSEXX VARCHAR2(10),  --性别
+  RYCSRQ VARCHAR2(100), --出生日期
+  RYGJDQ VARCHAR2(100), --国别
+  RYZJLX VARCHAR2(100), --证件类型
+  RYZJHM VARCHAR2(100), --证件号码
+  RYYJLY VARCHAR2(500),--研究领域
+  RYZHIC VARCHAR2(100), --职称
+  RYXUEW VARCHAR2(100), --学位
+  RYLOUX VARCHAR2(100),--邮箱
+  RYDWBH VARCHAR2(100),--单位代码
+  RYGZDW VARCHAR2(100),--工作单位名称
+  RYSZYX VARCHAR2(100),--所在学院
+  RYPZBH VARCHAR2(100),--在研批准编号
+  RYSXBH VARCHAR2(100) --最熟悉代码
+);
+ALTER TABLE xmcc.Tb_PersonCJ_Info ADD (
+  PRIMARY KEY
+ (RYIDNT));
+
+/////////////////////////////////////////////////////  还没做 
+drop sequence xmcc.Seq_PersonCJ_Info;
+create sequence xmcc.Seq_PersonCJ_Info
+nocycle
+maxvalue 9999999999
+start with 1;
+
+CREATE TRIGGER TRG_PersonCJ BEFORE
+INSERT  ON Tb_PersonCJ_Info
+FOR EACH ROW begin
+   SELECT Seq_PersonCJ_Info.NEXTVAL
+     INTO :NEW.RYIDNT
+     FROM DUAL;
+End TRG_PersonCJ; 
+/
+ 
+///////////////////////////////////////////////////// end 还没做 
+
+drop table xmcc.Tb_Shgxm_Info;
+create table xmcc.TB_SHGXM_INFO
+(
+  XMIDNT NUMBER(12) not null,
+  SHOULI VARCHAR2(12) not null,
+  PIZHUN VARCHAR2(12),
+  XMXKDM VARCHAR2(100),
+  XMXKDM2 VARCHAR2(100),
+  XMYJNX VARCHAR2(32),
+  XMYJSX VARCHAR2(32),
+  SBXKDM VARCHAR2(10),
+  SBXKDM2 VARCHAR2(10),
+  XMYEAR VARCHAR2(50),
+  XMTITL VARCHAR2(150),
+  XMKYWD VARCHAR2(260),
+  XMABST VARCHAR2(2000),
+  XMAUAR VARCHAR2(40),
+  XMDANW VARCHAR2(100),
+  XMZZLB VARCHAR2(40),
+  MAXXSL NUMBER(6,4) default 0.0 ,
+ -- XMBASE CLOB,
+  XMNEED CLOB,
+  XMOPTN CLOB,
+ -- FILENM VARCHAR2(100),
+  SGTIKY VARCHAR2(500),
+  SGNEED CLOB,
+  SGTHRE CLOB,
+  SGFOUR CLOB,
+  XMFULL CLOB,
+  STAEXT VARCHAR2(10),
+  STATIT VARCHAR2(10),
+  STACLU VARCHAR2(10),
+  STASHG VARCHAR2(10),
+  STAMUT VARCHAR2(10),
+  STAIND VARCHAR2(10),
+  XMSTAT VARCHAR2(10),
+  TONGJI VARCHAR2(10),
+  XMEDU  VARCHAR2(32),
+  FULLFLAG VARCHAR2(10)
+)
+partition by list (SBXKDM)
+(
+ partition A01 values ('A01') tablespace ts_A01, partition A02 values ('A02') tablespace ts_A02, partition A03 values ('A03') tablespace ts_A03,
+ partition A04 values ('A04') tablespace ts_A04, partition A05 values ('A05') tablespace ts_A05, partition A06 values ('A06') tablespace ts_A06, partition A07 values ('A07') tablespace ts_A07,
+ partition A08 values ('A08') tablespace ts_A08, partition A09 values ('A09') tablespace ts_A09, partition A10 values ('A10') tablespace ts_A10,
+ partition B01 values ('B01') tablespace ts_B01, partition B02 values ('B02') tablespace ts_B02, partition B03 values ('B03') tablespace ts_B03,
+ partition B04 values ('B04') tablespace ts_B04, partition B05 values ('B05') tablespace ts_B05, partition B06 values ('B06') tablespace ts_B06, partition B07 values ('B07') tablespace ts_B07,
+ partition C01 values ('C01') tablespace ts_C01, partition C02 values ('C02') tablespace ts_C02, partition C03 values ('C03') tablespace ts_C03,
+ partition C04 values ('C04') tablespace ts_C04, partition C05 values ('C05') tablespace ts_C05, partition C06 values ('C06') tablespace ts_C06, partition C07 values ('C07') tablespace ts_C07,
+ partition C08 values ('C08') tablespace ts_C08, partition C09 values ('C09') tablespace ts_C09, partition C10 values ('C10') tablespace ts_C10,
+ partition C11 values ('C11') tablespace ts_C11, partition C12 values ('C12') tablespace ts_C12, partition C13 values ('C13') tablespace ts_C13,
+ partition C14 values ('C14') tablespace ts_C14, partition C15 values ('C15') tablespace ts_C15, partition C16 values ('C16') tablespace ts_C16, partition C17 values ('C17') tablespace ts_C17,
+ partition C18 values ('C18') tablespace ts_C18, partition C19 values ('C19') tablespace ts_C19, partition C20 values ('C20') tablespace ts_C20, partition C21 values ('C21') tablespace ts_C21,
+ partition D01 values ('D01') tablespace ts_D01, partition D02 values ('D02') tablespace ts_D02, partition D03 values ('D03') tablespace ts_D03,
+ partition D04 values ('D04') tablespace ts_D04, partition D05 values ('D05') tablespace ts_D05, partition D06 values ('D06') tablespace ts_D06, partition D07 values ('D07') tablespace ts_D07,
+ partition E01 values ('E01') tablespace ts_E01, partition E02 values ('E02') tablespace ts_E02, partition E03 values ('E03') tablespace ts_E03,
+ partition E04 values ('E04') tablespace ts_E04, partition E05 values ('E05') tablespace ts_E05, partition E06 values ('E06') tablespace ts_E06, partition E07 values ('E07') tablespace ts_E07, partition E08 values ('E08') tablespace ts_E08, partition E09 values ('E09') tablespace ts_E09,
+ partition F01 values ('F01') tablespace ts_F01, partition F02 values ('F02') tablespace ts_F02, partition F03 values ('F03') tablespace ts_F03,
+ partition F04 values ('F04') tablespace ts_F04, partition F05 values ('F05') tablespace ts_F05, partition F06 values ('F06') tablespace ts_F06, partition F07 values ('F07') tablespace ts_F07,
+ partition G01 values ('G01') tablespace ts_G01, partition G02 values ('G02') tablespace ts_G02, partition G03 values ('G03') tablespace ts_G03,
+ partition G04 values ('G04') tablespace ts_G04, partition G05 values ('G05') tablespace ts_G05, partition G06 values ('G06') tablespace ts_G06, partition G07 values ('G07') tablespace ts_G07,
+ partition H01 values ('H01') tablespace ts_H01, partition H02 values ('H02') tablespace ts_H02, partition H03 values ('H03') tablespace ts_H03,
+ partition H04 values ('H04') tablespace ts_H04, partition H05 values ('H05') tablespace ts_H05, partition H06 values ('H06') tablespace ts_H06, partition H07 values ('H07') tablespace ts_H07,
+ partition H08 values ('H08') tablespace ts_H08, partition H09 values ('H09') tablespace ts_H09, partition H10 values ('H10') tablespace ts_H10,
+ partition H11 values ('H11') tablespace ts_H11, partition H12 values ('H12') tablespace ts_H12, partition H13 values ('H13') tablespace ts_H13,
+ partition H14 values ('H14') tablespace ts_H14, partition H15 values ('H15') tablespace ts_H15, partition H16 values ('H16') tablespace ts_H16, partition H17 values ('H17') tablespace ts_H17,
+ partition H18 values ('H18') tablespace ts_H18, partition H19 values ('H19') tablespace ts_H19, partition H20 values ('H20') tablespace ts_H20,
+ partition H21 values ('H21') tablespace ts_H21, partition H22 values ('H22') tablespace ts_H22, partition H23 values ('H23') tablespace ts_H23,
+ partition H24 values ('H24') tablespace ts_H24, partition H25 values ('H25') tablespace ts_H25, partition H26 values ('H26') tablespace ts_H26, partition H27 values ('H27') tablespace ts_H27,
+ partition H28 values ('H28') tablespace ts_H28, partition H29 values ('H29') tablespace ts_H29, partition H30 values ('H30') tablespace ts_H30,
+ partition H31 values ('H31') tablespace ts_H31, partition H32 values ('H32') tablespace ts_H32, partition H33 values ('H33') tablespace ts_H33, partition H34 values ('H34') tablespace ts_H34,
+ partition Z0 values (default) TABLESPACE xmcc_data
+);
+
+ALTER TABLE xmcc.Tb_ShgXm_Info ADD (
+  PRIMARY KEY
+ (XMIDNT));  
+
+--alter table xmcc.Tb_ShgXm_Info
+--add constraint a_unique unique(XMTITL,XMAUAR,XMZZLB);
+
+alter table xmcc.Tb_ShgXm_Info
+add constraint B_unique unique(SHOULI);
+
+
+drop sequence xmcc.Seq_shgxm_info;
+create sequence xmcc.Seq_shgxm_info 
+nocycle
+maxvalue 9999999999
+start with 1;
+
+CREATE TRIGGER TRG_shgxm BEFORE
+INSERT  ON Tb_shgxm_Info
+FOR EACH ROW begin
+   SELECT Seq_shgxm_Info.NEXTVAL
+     INTO :NEW.XMIDNT
+     FROM DUAL;
+End TRG_shgxm; 
+/
+ 
+ 
+
+drop table xmcc.Tb_Shgxm_xsl;
+create table xmcc.TB_SHGXM_XSL
+(
+ XSLAID  NUMBER(12) not null,
+  XSLBID  NUMBER(12) not null,
+  SBXKDM  VARCHAR2(100),
+  AXKDM   VARCHAR2(100),
+  BXKDM   VARCHAR2(100),
+  AZZLB   VARCHAR2(40),
+  BZZLB   VARCHAR2(40),
+  ATITLE  VARCHAR2(150),
+  BTITLE  VARCHAR2(150),
+  AAUAR   VARCHAR2(40),
+  BAUAR   VARCHAR2(40),
+  ADANW   VARCHAR2(100),
+  BDANW   VARCHAR2(100),
+  AXMKYWD VARCHAR2(300),
+  BXMKYWD VARCHAR2(300),
+  XSLNED  VARCHAR2(50),
+  XSLOPN  VARCHAR2(50),
+  XSLCNT  NUMBER(6,4) default 0.0,
+  XSLTHR  NUMBER(6,4),
+  XSLFOU  NUMBER(6,4),
+  XSLALL  NUMBER(6,4),
+  NUMSAM  NUMBER(7),
+  SAMSHG  CLOB,
+  XSLSTA  VARCHAR2(10),
+  FORSHG  CLOB,
+  THRSHG  CLOB,
+  AYEAR   VARCHAR2(16),
+  BYEAR   VARCHAR2(16),
+  AYJNX   VARCHAR2(16),
+  BYJNX   VARCHAR2(16),
+  AEDU    VARCHAR2(32),
+  BEDU    VARCHAR2(32),
+  APIZHUN VARCHAR2(12),
+  BPIZHUN VARCHAR2(12),
+  SAMNAM  VARCHAR2(10),
+  SAMDW   VARCHAR2(10),
+  SAMYEAR VARCHAR2(10),
+  ANEED   CLOB,
+  BNEED   CLOB,
+  ASGNEED CLOB,
+  BSGNEED CLOB,
+  AFULL   CLOB,
+  BFULL   CLOB  
+)
+partition by list (SBXKDM)
+(
+ partition A01 values ('A01') tablespace ts_A01, partition A02 values ('A02') tablespace ts_A02, partition A03 values ('A03') tablespace ts_A03,
+ partition A04 values ('A04') tablespace ts_A04, partition A05 values ('A05') tablespace ts_A05, partition A06 values ('A06') tablespace ts_A06, partition A07 values ('A07') tablespace ts_A07,
+ partition A08 values ('A08') tablespace ts_A08, partition A09 values ('A09') tablespace ts_A09, partition A10 values ('A10') tablespace ts_A10,
+ partition B01 values ('B01') tablespace ts_B01, partition B02 values ('B02') tablespace ts_B02, partition B03 values ('B03') tablespace ts_B03,
+ partition B04 values ('B04') tablespace ts_B04, partition B05 values ('B05') tablespace ts_B05, partition B06 values ('B06') tablespace ts_B06, partition B07 values ('B07') tablespace ts_B07,
+ partition C01 values ('C01') tablespace ts_C01, partition C02 values ('C02') tablespace ts_C02, partition C03 values ('C03') tablespace ts_C03,
+ partition C04 values ('C04') tablespace ts_C04, partition C05 values ('C05') tablespace ts_C05, partition C06 values ('C06') tablespace ts_C06, partition C07 values ('C07') tablespace ts_C07,
+ partition C08 values ('C08') tablespace ts_C08, partition C09 values ('C09') tablespace ts_C09, partition C10 values ('C10') tablespace ts_C10,
+ partition C11 values ('C11') tablespace ts_C11, partition C12 values ('C12') tablespace ts_C12, partition C13 values ('C13') tablespace ts_C13,
+ partition C14 values ('C14') tablespace ts_C14, partition C15 values ('C15') tablespace ts_C15, partition C16 values ('C16') tablespace ts_C16, partition C17 values ('C17') tablespace ts_C17,
+ partition C18 values ('C18') tablespace ts_C18, partition C19 values ('C19') tablespace ts_C19, partition C20 values ('C20') tablespace ts_C20, partition C21 values ('C21') tablespace ts_C21,
+ partition D01 values ('D01') tablespace ts_D01, partition D02 values ('D02') tablespace ts_D02, partition D03 values ('D03') tablespace ts_D03,
+ partition D04 values ('D04') tablespace ts_D04, partition D05 values ('D05') tablespace ts_D05, partition D06 values ('D06') tablespace ts_D06, partition D07 values ('D07') tablespace ts_D07,
+ partition E01 values ('E01') tablespace ts_E01, partition E02 values ('E02') tablespace ts_E02, partition E03 values ('E03') tablespace ts_E03,
+ partition E04 values ('E04') tablespace ts_E04, partition E05 values ('E05') tablespace ts_E05, partition E06 values ('E06') tablespace ts_E06, partition E07 values ('E07') tablespace ts_E07, partition E08 values ('E08') tablespace ts_E08, partition E09 values ('E09') tablespace ts_E09,
+ partition F01 values ('F01') tablespace ts_F01, partition F02 values ('F02') tablespace ts_F02, partition F03 values ('F03') tablespace ts_F03,
+ partition F04 values ('F04') tablespace ts_F04, partition F05 values ('F05') tablespace ts_F05, partition F06 values ('F06') tablespace ts_F06, partition F07 values ('F07') tablespace ts_F07,
+ partition G01 values ('G01') tablespace ts_G01, partition G02 values ('G02') tablespace ts_G02, partition G03 values ('G03') tablespace ts_G03,
+ partition G04 values ('G04') tablespace ts_G04, partition G05 values ('G05') tablespace ts_G05, partition G06 values ('G06') tablespace ts_G06, partition G07 values ('G07') tablespace ts_G07,
+ partition H01 values ('H01') tablespace ts_H01, partition H02 values ('H02') tablespace ts_H02, partition H03 values ('H03') tablespace ts_H03,
+ partition H04 values ('H04') tablespace ts_H04, partition H05 values ('H05') tablespace ts_H05, partition H06 values ('H06') tablespace ts_H06, partition H07 values ('H07') tablespace ts_H07,
+ partition H08 values ('H08') tablespace ts_H08, partition H09 values ('H09') tablespace ts_H09, partition H10 values ('H10') tablespace ts_H10,
+ partition H11 values ('H11') tablespace ts_H11, partition H12 values ('H12') tablespace ts_H12, partition H13 values ('H13') tablespace ts_H13,
+ partition H14 values ('H14') tablespace ts_H14, partition H15 values ('H15') tablespace ts_H15, partition H16 values ('H16') tablespace ts_H16, partition H17 values ('H17') tablespace ts_H17,
+ partition H18 values ('H18') tablespace ts_H18, partition H19 values ('H19') tablespace ts_H19, partition H20 values ('H20') tablespace ts_H20,
+ partition H21 values ('H21') tablespace ts_H21, partition H22 values ('H22') tablespace ts_H22, partition H23 values ('H23') tablespace ts_H23,
+ partition H24 values ('H24') tablespace ts_H24, partition H25 values ('H25') tablespace ts_H25, partition H26 values ('H26') tablespace ts_H26, partition H27 values ('H27') tablespace ts_H27,
+ partition H28 values ('H28') tablespace ts_H28, partition H29 values ('H29') tablespace ts_H29, partition H30 values ('H30') tablespace ts_H30,
+ partition H31 values ('H31') tablespace ts_H31, partition H32 values ('H32') tablespace ts_H32, partition H33 values ('H33') tablespace ts_H33, partition H34 values ('H34') tablespace ts_H34,
+ partition Z0 values (default) TABLESPACE xmcc_data
+);
+
+ALTER TABLE xmcc.Tb_Shgxm_xsl ADD (
+  PRIMARY KEY
+ (XSLAID,XSLBID)); 
+
+索引
+-- Create/Recreate indexes 
+create index IDX_XSL_AXKDM on TB_SHGXM_XSL (SUBSTR(AXKDM,0,3))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_AYEAR on TB_SHGXM_XSL (AYEAR)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_AZZLB on TB_SHGXM_XSL (AZZLB)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BXKDM on TB_SHGXM_XSL (SUBSTR(BXKDM,0,3))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BYEAR on TB_SHGXM_XSL (BYEAR)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_BZZLB on TB_SHGXM_XSL (BZZLB)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_SAMDW on TB_SHGXM_XSL (SAMDW)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_SAMNAM on TB_SHGXM_XSL (SAMNAM)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLAID on TB_SHGXM_XSL (XSLAID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLBID on TB_SHGXM_XSL (XSLBID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLCNT on TB_SHGXM_XSL (XSLCNT)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index IDX_XSL_XSLSTA on TB_SHGXM_XSL (SUBSTR(XSLSTA,0,1))
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+end索引
+
+drop table xmcc.Tb_XmShgPair;
+create table xmcc.Tb_XmShgPair
+(
+  XMIDNT		number(12), 
+  SHGHSH		varchar2(100),
+  XMXKDM		varchar2(100)
+)
+partition by list (XMXKDM)
+(
+ partition A01 values ('A01') tablespace ts_A01, partition A02 values ('A02') tablespace ts_A02, partition A03 values ('A03') tablespace ts_A03,
+ partition A04 values ('A04') tablespace ts_A04, partition A05 values ('A05') tablespace ts_A05, partition A06 values ('A06') tablespace ts_A06, partition A07 values ('A07') tablespace ts_A07,
+ partition A08 values ('A08') tablespace ts_A08, partition A09 values ('A09') tablespace ts_A09, partition A10 values ('A10') tablespace ts_A10,
+ partition B01 values ('B01') tablespace ts_B01, partition B02 values ('B02') tablespace ts_B02, partition B03 values ('B03') tablespace ts_B03,
+ partition B04 values ('B04') tablespace ts_B04, partition B05 values ('B05') tablespace ts_B05, partition B06 values ('B06') tablespace ts_B06, partition B07 values ('B07') tablespace ts_B07,
+ partition C01 values ('C01') tablespace ts_C01, partition C02 values ('C02') tablespace ts_C02, partition C03 values ('C03') tablespace ts_C03,
+ partition C04 values ('C04') tablespace ts_C04, partition C05 values ('C05') tablespace ts_C05, partition C06 values ('C06') tablespace ts_C06, partition C07 values ('C07') tablespace ts_C07,
+ partition C08 values ('C08') tablespace ts_C08, partition C09 values ('C09') tablespace ts_C09, partition C10 values ('C10') tablespace ts_C10,
+ partition C11 values ('C11') tablespace ts_C11, partition C12 values ('C12') tablespace ts_C12, partition C13 values ('C13') tablespace ts_C13,
+ partition C14 values ('C14') tablespace ts_C14, partition C15 values ('C15') tablespace ts_C15, partition C16 values ('C16') tablespace ts_C16, partition C17 values ('C17') tablespace ts_C17,
+ partition C18 values ('C18') tablespace ts_C18, partition C19 values ('C19') tablespace ts_C19, partition C20 values ('C20') tablespace ts_C20, partition C21 values ('C21') tablespace ts_C21,
+ partition D01 values ('D01') tablespace ts_D01, partition D02 values ('D02') tablespace ts_D02, partition D03 values ('D03') tablespace ts_D03,
+ partition D04 values ('D04') tablespace ts_D04, partition D05 values ('D05') tablespace ts_D05, partition D06 values ('D06') tablespace ts_D06, partition D07 values ('D07') tablespace ts_D07,
+ partition E01 values ('E01') tablespace ts_E01, partition E02 values ('E02') tablespace ts_E02, partition E03 values ('E03') tablespace ts_E03,
+ partition E04 values ('E04') tablespace ts_E04, partition E05 values ('E05') tablespace ts_E05, partition E06 values ('E06') tablespace ts_E06, partition E07 values ('E07') tablespace ts_E07, partition E08 values ('E08') tablespace ts_E08, partition E09 values ('E09') tablespace ts_E09,
+ partition F01 values ('F01') tablespace ts_F01, partition F02 values ('F02') tablespace ts_F02, partition F03 values ('F03') tablespace ts_F03,
+ partition F04 values ('F04') tablespace ts_F04, partition F05 values ('F05') tablespace ts_F05, partition F06 values ('F06') tablespace ts_F06, partition F07 values ('F07') tablespace ts_F07,
+ partition G01 values ('G01') tablespace ts_G01, partition G02 values ('G02') tablespace ts_G02, partition G03 values ('G03') tablespace ts_G03,
+ partition G04 values ('G04') tablespace ts_G04, partition G05 values ('G05') tablespace ts_G05, partition G06 values ('G06') tablespace ts_G06, partition G07 values ('G07') tablespace ts_G07,
+ partition H01 values ('H01') tablespace ts_H01, partition H02 values ('H02') tablespace ts_H02, partition H03 values ('H03') tablespace ts_H03,
+ partition H04 values ('H04') tablespace ts_H04, partition H05 values ('H05') tablespace ts_H05, partition H06 values ('H06') tablespace ts_H06, partition H07 values ('H07') tablespace ts_H07,
+ partition H08 values ('H08') tablespace ts_H08, partition H09 values ('H09') tablespace ts_H09, partition H10 values ('H10') tablespace ts_H10,
+ partition H11 values ('H11') tablespace ts_H11, partition H12 values ('H12') tablespace ts_H12, partition H13 values ('H13') tablespace ts_H13,
+ partition H14 values ('H14') tablespace ts_H14, partition H15 values ('H15') tablespace ts_H15, partition H16 values ('H16') tablespace ts_H16, partition H17 values ('H17') tablespace ts_H17,
+ partition H18 values ('H18') tablespace ts_H18, partition H19 values ('H19') tablespace ts_H19, partition H20 values ('H20') tablespace ts_H20,
+ partition H21 values ('H21') tablespace ts_H21, partition H22 values ('H22') tablespace ts_H22, partition H23 values ('H23') tablespace ts_H23,
+ partition H24 values ('H24') tablespace ts_H24, partition H25 values ('H25') tablespace ts_H25, partition H26 values ('H26') tablespace ts_H26, partition H27 values ('H27') tablespace ts_H27,
+ partition H28 values ('H28') tablespace ts_H28, partition H29 values ('H29') tablespace ts_H29, partition H30 values ('H30') tablespace ts_H30,
+ partition H31 values ('H31') tablespace ts_H31, partition H32 values ('H32') tablespace ts_H32, partition H33 values ('H33') tablespace ts_H33, partition H34 values ('H34') tablespace ts_H34,
+ partition Z0 values (default) TABLESPACE xmcc_data
+);
+
+ALTER TABLE xmcc.Tb_XmShgPair ADD (
+  PRIMARY KEY
+ (XMIDNT,SHGHSH,XMXKDM)); 
+
+
+drop table xmcc.tb_senxm_xsl;
+create table xmcc.Tb_SenXm_Xsl
+(
+  XSLAID NUMBER(12) not null,
+  XSLBID NUMBER(12) not null,  
+  AXKDM  VARCHAR2(100),
+  BXKDM  VARCHAR2(100),
+  AZZLB  VARCHAR2(40),
+  BZZLB  VARCHAR2(40),
+  ATITLE VARCHAR2(150),
+  BTITLE VARCHAR2(150),
+  AAUAR VARCHAR2(40),
+  BAUAR VARCHAR2(40),
+  ADANW VARCHAR2(100),
+  BDANW VARCHAR2(100),
+  AYEAR VARCHAR2(50),
+  BYEAR VARCHAR2(50),
+  ASENNO NUMBER(4),
+  BSENNO NUMBER(4),  
+  SAMSEN VARCHAR2(4000),
+  XSLCNT NUMBER(6,4) default 0.0
+);
+ALTER TABLE xmcc.Tb_SenXm_Xsl ADD (
+  PRIMARY KEY
+ (XSLAID,XSLBID,ASENNO,BSENNO)); 
+
+create index xmcc.SENXM_INDEX_AID on xmcc.TB_SENXM_XSL (XSLAID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index xmcc.SENXM_INDEX_BID on xmcc.TB_SENXM_XSL (XSLBID)
+  tablespace XMCC_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+  
+drop table xmcc.Tb_word;
+create table xmcc.Tb_word
+(
+  words                 varchar2(40),
+  type                  varchar2(40),
+  stop                  varchar2(40),
+  freq					varchar2(100),
+  freq_int              number(10)
+)
+LOGGING 
+NOCOMPRESS 
+NOCACHE
+NOPARALLEL
+MONITORING;
+
+
+
+ALTER TABLE xmcc.Tb_word ADD (
+  PRIMARY KEY
+ (words)); 
+
+
+
+
+--数据导入所用的sql
+alter table tb_shgxm_info enable row movement;
+commit;
+
+UPDATE tb_shgxm_info t
+SET 
+xmidnt = shouli,
+SBXKDM = SUBSTR(XMXKDM,0,3),
+SBXKDM2 = SUBSTR(XMXKDM2,0,3)
+where xmyear='2009' and pizhun is null;
+;
+    
+    
+update 
+(SELECT xmauar,RYNAME,xmdanw,RYGZDW,T1.XMIDNT,T2.SHOULI 
+  FROM XMCC.TB_SHGXM_INFO T1 ,xmcc.tb_personsq_info T2
+ WHERE T1.XMIDNT = T2.SHOULI AND T1.xmyear='2009' and T1.pizhun is null)  
+ SET
+ xmauar = RYNAME,
+ xmdanw = RYGZDW;
+
+
+update tb_shgxm_info t
+set statit='00',staclu='00',stashg='00',stamut='00',staind='00',xmstat='00',tongji='00'
+where xmyear='2010'
+;
+commit;
+
+//
+UPDATE 
+(SELECT XSLAID, XMIDNT, AYEAR, XMYEAR, AYJNX, XMYJNX
+ FROM Tb_shgxm_xsl t1,TB_SHGXM_INFO T2
+ WHERE T1.XSLAID = T2.XMIDNT )
+SET AYEAR = XMYEAR,
+    AYJNX = XMYJNX
+ ;
+ 
+ UPDATE 
+(SELECT XSLBID, XMIDNT, BYEAR, XMYEAR, BYJNX, XMYJNX
+ FROM Tb_shgxm_xsl t1,TB_SHGXM_INFO T2
+ WHERE T1.XSLBID = T2.XMIDNT )
+SET BYEAR = XMYEAR,
+    BYJNX = XMYJNX
+ ;
+
+ UPDATE 
+(SELECT APIZHUN, PIZHUN
+ FROM Tb_shgxm_xsl t1,TB_SHGXM_INFO T2
+ WHERE T1.XSLAID = T2.XMIDNT )
+SET APIZHUN = PIZHUN
+ ;
+
+
+ UPDATE 
+(SELECT BPIZHUN, PIZHUN
+ FROM Tb_shgxm_xsl t1,TB_SHGXM_INFO T2
+ WHERE T1.XSLBID = T2.XMIDNT )
+SET BPIZHUN = PIZHUN
+ ;
+ 
+//替换用的一些
+/' 替换 /''
+&  替换 '||'&'||'
+^r^n 替换为空
+INSERT 替换为 ^r^nINSERT
+
+///split partition
+alter table TB_SHGXM_INFO split partition 
+Z0 values('A08') into (partition A08 tablespace ts_A08,partition z0 tablespace xmcc_data);
+
+Select table_name,partition_name From user_tab_partitions s Where s.table_name='TB_SHGXM_INFO';
+
+
+//普通导入导出数据
+
+exp xmcc/xmccpwd  tables=tb_word.dmp  file=e:1229.dmp  buffer=8192000
+exp xmcc/xmccpwd   tables=(xmcc.TB_SENXM_XSL)  file=d:TB_SENXM_XSL.dmp  buffer=81920000
+imp xmcc/xmccpwd full=y  file=e:tb_word.dmp ignore=y buffer=81920
+
+
+
+//重置到录入后
+delete from tb_senxm_xsl;
+delete from tb_xmshgpair;
+delete from tb_shgxm_xsl;
+
+UPDATE TB_SHGXM_INFO 
+ SET STACLU='00' ,
+  STASHG='00' , 
+  STAMUT='00' ,
+  STATIT='00' ,
+  xmstat='00' ,
+  maxxsl=0.0 ,
+  staind='00';
+
+COMMIT;
+
+///一些很有用的命令
+
+set autotrace traceonly;
+
+explain plan for select XMIDNT, XMXKDM, XMTITL, XMKYWD, XMABST, XMNEED,XMZZLB ,XMAUAR,XMDANW,XMYEAR,MAXXSL from xmcc.Tb_ShgXm_Info where XMIDNT=81070853;
+select * from table(dbms_xplan.display);
+
+explain plan for select XSLBID,BXKDM, BZZLB, BTITLE, BAUAR, BDANW,BYEAR, BSENNO,SAMSEN ,XSLCNT from xmcc.tb_senxm_xsl where xslaid=81070853 order by XSLCNT desc
+select * from table(dbms_xplan.display);
+
+SELECT * FROM user_tables 
+WHERE table_name='TB_SHGXM_INFO'
+ AND num_rows is not null; 
+
+SELECT * FROM user_indexes 
+ WHERE  num_rows is not null AND table_name='TB_SHGXM_INFO'
+ 
+ANALYZE TABLE TB_SHGXM_INFO COMPUTE STATISTICS; 
+ANALYZE INDEX index_name ESTIMATE STATISTICS; 
+
+ORA-01502: 索引或这类索引的分区处于不可用状态 
+这个错误是由于索引失效造成的，重建索引后，问题就解决了
+
+alter index PK_T_CMS_CATALOG  rebuild
+
+PK_T_CMS_CATALOG  是报错的那个索引的名字
+
+
+///
+
+update w10_09z.tb_shgxm_xsl t 
+SET 
+T.Axmkywd = (SELECT xmkywd FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLAID),
+T.Bxmkywd = (SELECT xmkywd FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLBID),
+T.ANEED = (SELECT XMNEED FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLAID),
+T.BNEED = (SELECT XMNEED FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLBID),
+T.ASGNEED = (SELECT SGNEED FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLAID),
+T.BSGNEED = (SELECT SGNEED FROM XMCC.TB_SHGXM_INFO WHERE XMIDNT=T.XSLBID);
+COMMIT;
+
+UPDATE 
+(SELECT XSLAID,Axmkywd, ANEED, ASGNEED,XMIDNT,xmkywd
+ FROM Tb_shgxm_xsl t1,TB_SHGXM_INFO T2
+ WHERE XSLAID = XMIDNT )
+SET AYEAR = XMYEAR,
+    AYJNX = XMYJNX
+ ;
+
+
+update xmcc.tb_shgxm_info t
+set t.fullflag = '01' 
+where xmfull is not null;
+commit;
+
+///同申请人，同单位，同年建立索引前sql
+update q11_z080910_2011.tb_shgxm_xsl t 
+SET 
+samnam = '00',
+samdw = '00',
+samyear='00';
+COMMIT;
+
+update q11_z080910_2011.tb_shgxm_xsl t 
+SET 
+samnam = '01' where t.aauar = t.bauar;
+COMMIT;
+
+update q11_z080910_2011.tb_shgxm_xsl t 
+SET 
+samdw = '01' where t.adanw = t.bdanw;
+COMMIT;
+
+update q11_z080910_2011.tb_shgxm_xsl t 
+SET 
+samyear = '01' where t.ayear = t.byear;
+COMMIT;
