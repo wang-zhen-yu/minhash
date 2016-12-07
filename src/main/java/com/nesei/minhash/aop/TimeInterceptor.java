@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
  * @Author wzy
  * @Date 2016/12/2 20:48
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class TimeInterceptor {
 
     private static Log logger = LogFactory.getLog(TimeInterceptor.class);

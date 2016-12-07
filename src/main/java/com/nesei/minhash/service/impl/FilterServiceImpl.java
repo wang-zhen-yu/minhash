@@ -16,7 +16,19 @@ public class FilterServiceImpl implements FilterService {
     @Autowired
     private Filter filter;
 
-    public boolean filter(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e) {
-        return filter.filterHash(DCHash, BDHash, observationPoints, TL, TU, e);
+    public boolean filterMH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e) {
+        return filter.filterMH(DCHash, BDHash, observationPoints, TL, TU, e);
     }
+
+    public boolean filterOPH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e) {
+        return filter.filterOPH(DCHash, BDHash, observationPoints, TL, TU, e);
+    }
+
+    public double getUpper(int k, double T, double e) {
+        return filter.getUpper(k, T, e);
+    };
+
+    public double getLower(int k, double T, double e) {
+        return filter.getLower(k, T, e);
+    };
 }

@@ -19,7 +19,11 @@ public interface FilterService {
      * @param e
      * @return
      */
-    boolean filter(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e);
+    boolean filterMH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e);
+    boolean filterOPH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e);
+
+    double getUpper(int k, double T, double e);
+    double getLower(int k, double T, double e);
 }
 
 

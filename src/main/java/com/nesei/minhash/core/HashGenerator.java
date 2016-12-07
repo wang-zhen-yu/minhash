@@ -20,7 +20,7 @@ public class HashGenerator {
     /**
      * 映射文件总数量
      */
-    private static int K_All = 500;
+    private static int K_All = 1000;
 
     /**  */
     private static String[] pers = loadPer();

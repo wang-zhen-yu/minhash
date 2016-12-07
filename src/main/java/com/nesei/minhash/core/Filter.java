@@ -16,25 +16,12 @@ public class Filter {
     @Autowired
     private CalculateService calculateService;
 
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        int k = 100;
-        double T = 0.5;
-        double e = 0.0000000001;
-        double upper = getLower(k, T, e);
-
-        System.out.println(upper);
-    }
-
-    public boolean filterHash(String hashA, String hashB, List<Integer> observationPoints, double TL, double TU, double e) {
+    public boolean filterMH(String hashA, String hashB, List<Integer> observationPoints, double TL, double TU, double e) {
         if (CollectionUtils.isEmpty(observationPoints)) {
             throw new RuntimeException("观测点列表为空！");
         }
 
-        double tmpTL=0,tmpTU=1;
+        double tmpTL = 0, tmpTU = 1;
 
         for (int i = 0; i < observationPoints.size(); i++) {
             //现在所在观测点
@@ -50,6 +37,27 @@ public class Filter {
         return true;
     }
 
+    public boolean filterOPH(String hashA, String hashB, List<Integer> observationPoints, double TL, double TU, double e) {
+        if (CollectionUtils.isEmpty(observationPoints)) {
+            throw new RuntimeException("观测点列表为空！");
+        }
+
+        double tmpTL = 0, tmpTU = 1;
+
+        for (int i = 0; i < observationPoints.size(); i++) {
+            //现在所在观测点
+            int k = observationPoints.get(i);
+
+            tmpTU = getUpper(k, TU, e);
+            tmpTL = getLower(k, TL, e);
+            double xsl = calculateService.calcXlsOfOnePerHash(hashA.substring(0, k), hashB.substring(0, k), false);
+
+            //如果相似率大于上阈值或者小于下阈值
+            if (xsl > tmpTU || xsl < tmpTL) return false;
+        }
+        return true;
+    }
+
     /**
      * 计算上界阈值
      *
@@ -58,7 +66,7 @@ public class Filter {
      * @param e 最小概率
      * @return
      */
-    public static double getUpper(int k, double T, double e) {
+    public double getUpper(int k, double T, double e) {
         int x = k + 1;
         double totalProbability = 0;
 
@@ -78,7 +86,7 @@ public class Filter {
      * @param e 最小概率
      * @return
      */
-    public static double getLower(int k, double T, double e) {
+    public double getLower(int k, double T, double e) {
         int i = -1;
         double totalProbability = 0;
 

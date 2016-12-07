@@ -45,7 +45,7 @@ public class HashServiceImpl implements HashService {
 
         }
 
-        return strShingles.toString().substring(1);
+        return strShingles.toString();
     }
 
     public List<String> String2Shingle(List<String> strings) throws Exception {

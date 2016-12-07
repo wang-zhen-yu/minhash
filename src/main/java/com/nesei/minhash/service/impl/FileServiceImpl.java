@@ -27,8 +27,8 @@ public class FileServiceImpl implements FileService {
         String context=new Tika().parseToString(new File(filePath));
         article.setContext(context);
         article.setFilePath(filePath);
-        article.setMinHash(hashService.string2Minvalue(context));
-        article.setShingle(hashService.String2Shingle(context));
+//        article.setMinHash(hashService.string2Minvalue(context));
+//        article.setShingle(hashService.String2Shingle(context));
 
         return article;
     }
@@ -64,7 +64,7 @@ public class FileServiceImpl implements FileService {
             if(extension.equals("doc")||extension.equals("docx")||extension.equals("pdf")||extension.equals("txt")){
                 fileNameListHistory.add(filesub.getPath());
             }
-            if (fileNameListHistory.size() >= 100) break;
+            if (fileNameListHistory.size() >= 10000 ) break;
         }
         return fileNameListHistory;
     }

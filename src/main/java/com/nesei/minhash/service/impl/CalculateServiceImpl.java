@@ -20,7 +20,7 @@ public class CalculateServiceImpl implements CalculateService {
         int size = Math.min(hashArrayA.length, hashArrayB.length);
 
         for (int i = 0; i < size; i++) {
-            if (!hashArrayA[i].equals("*") && hashArrayA[i].equals(hashArrayB[i])) {
+            if (hashArrayA[i].equals(hashArrayB[i])) {
                 count++;
             }
         }
@@ -35,21 +35,31 @@ public class CalculateServiceImpl implements CalculateService {
         String[] hashArrayB = hashB.split("\\|");
         int count = 0;
         int size = Math.min(hashArrayA.length, hashArrayB.length);
+        int lastSize = size;
 
         for (int i = 0; i < size; i++) {
-            if (hashArrayA[i].equals("*")) {//认为空区相等
-                //认为空区相等
-                if (isEmptyPartitionEqual) {
-                    count++;
-                }
-            } else {//认为空区不相等
-                if (hashArrayA[i].equals(hashArrayB[i])) {
-                    count++;
-                }
+//            if (hashArrayA[i].equals("*")) {//认为空区相等
+//                //认为空区相等
+//                if (isEmptyPartitionEqual) {
+//                    count++;
+//                }
+//            } else {//认为空区不相等
+//                if (hashArrayA[i].equals(hashArrayB[i])) {
+//                    count++;
+//                }
+//            }
+
+            if ( hashArrayA[i].equals("*") && hashArrayB[i].equals("*")) { //均为空区
+                lastSize --;
+                continue;
+            }
+
+            if ( hashArrayA[i].equals(hashArrayB[i])) { //其中之一为空区
+                count ++;
             }
         }
 
-        xslMinwise = (float) count / size;
+        xslMinwise = (float) count / lastSize;
         return xslMinwise;
     }
 

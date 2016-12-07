@@ -1,5 +1,7 @@
 package com.nesei.minhash.bean;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 /**
  * @Author wzy
  * @Date 2016/12/6 17:09
@@ -20,6 +22,8 @@ public class Article {
 
     /**  */
     private String onePermHash;
+
+    private boolean isFiltered=false;
 
     /**
      * @return
@@ -89,6 +93,14 @@ public class Article {
      */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public boolean isFiltered() {
+        return isFiltered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        isFiltered = filtered;
     }
 }
 
