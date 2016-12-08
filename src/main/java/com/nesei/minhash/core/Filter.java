@@ -5,6 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +16,76 @@ import java.util.List;
 public class Filter {
     @Autowired
     private CalculateService calculateService;
+
+    public double filterMH(String hashA, String hashB, List<Integer> observationPoints, HashMap<Integer,Double> TLs, HashMap<Integer,Double> TUs) {
+        if (CollectionUtils.isEmpty(observationPoints)) {
+            throw new RuntimeException("观测点列表为空！");
+        }
+
+        String[] hashArrayA = hashA.split("\\|");
+        String[] hashArrayB = hashB.split("\\|");
+        int count = 0;
+        int size = Math.min(hashArrayA.length, hashArrayB.length);
+
+        for (int i = 0; i < size; i++) {
+            if (hashArrayA[i].equals(hashArrayB[i])) {
+                count++;
+            }
+
+            if(observationPoints.contains(i)){
+                double TL=TLs.get(i);
+                double TU=TUs.get(i);
+                double tmpXsl=count/i;
+
+                if(tmpXsl<TL||tmpXsl>TU){
+                    return i;
+                }
+            }
+        }
+
+        return (double)count/size;
+    }
+
+    public double filterMH2(String hashA, String hashB, List<Integer> observationPoints, List<Double> TLs, List<Double> TUs) {
+        if (CollectionUtils.isEmpty(observationPoints)) {
+            throw new RuntimeException("观测点列表为空！");
+        }
+
+        String[] hashArrayA = hashA.split("\\|");
+        String[] hashArrayB = hashB.split("\\|");
+        int count = 0;
+        int lastObs=0;
+        int size = Math.min(hashArrayA.length, hashArrayB.length);
+
+        //遍历观测点
+        for(int i=0;i<observationPoints.size();i++){
+            int obs=observationPoints.get(i);
+            //遍历从上个观测点到现在这个观测点
+            for(int j=lastObs;j<obs;j++){
+                if (hashArrayA[j].equals(hashArrayB[j])) {
+                    count++;
+                }
+            }
+            lastObs=obs;
+            double TL=TLs.get(i);
+            double TU=TUs.get(i);
+            double tmpXsl=count/obs;
+
+            //判断当前观测点是否过滤
+            if(tmpXsl<TL||tmpXsl>TU){
+                return obs;
+            }
+        }
+
+        //遍历从最后一个观测点到结尾
+        for(int i=lastObs;i<size;i++){
+            if (hashArrayA[i].equals(hashArrayB[i])) {
+                count++;
+            }
+        }
+
+        return (double)count/size;
+    }
 
     public boolean filterMH(String hashA, String hashB, List<Integer> observationPoints, double TL, double TU, double e) {
         if (CollectionUtils.isEmpty(observationPoints)) {

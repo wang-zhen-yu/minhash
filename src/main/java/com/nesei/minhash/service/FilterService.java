@@ -1,5 +1,6 @@
 package com.nesei.minhash.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,9 +21,15 @@ public interface FilterService {
      * @return
      */
     boolean filterMH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e);
+
     boolean filterOPH(String DCHash, String BDHash, List<Integer> observationPoints, double TL, double TU, double e);
 
+    double filterMH(String hashA, String hashB, List<Integer> observationPoints, HashMap<Integer, Double> TLs, HashMap<Integer, Double> TUs);
+
+    double filterMH(String hashA, String hashB, List<Integer> observationPoints, List<Double> TLs, List<Double> TUs);
+
     double getUpper(int k, double T, double e);
+
     double getLower(int k, double T, double e);
 }
 

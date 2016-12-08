@@ -37,7 +37,7 @@ public class HashGenerator {
         String minValues = "";
 
         for (int i = 0; i < K; i++) {
-            int[] mappedHash = mapHash(pers[i], hashcode);
+            int[] mappedHash = mapHash(pers[i%K_All], hashcode);
             int   minValue   = findMinFromMappedHash(mappedHash);
 
             minValues += minValue + "|";
@@ -59,7 +59,7 @@ public class HashGenerator {
 
         // 进行K次映射
         for (int i = 0; i < K; i++) {
-            hashcode = mapHash(pers[i], hashcode);
+            hashcode = mapHash(pers[i%K_All], hashcode);
         }
 
         //矩阵化：将置换结果二进制矩阵化

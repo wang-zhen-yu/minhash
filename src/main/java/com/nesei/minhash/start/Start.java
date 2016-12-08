@@ -14,10 +14,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @Author wzy
@@ -43,17 +40,17 @@ public class Start {
         long start = System.currentTimeMillis();
 
 //        Article DC=fileService.readFile("E:\\test\\1160010012.pdf");
-        Article DC=fileService.readFile("E:\\test\\“暴走妈妈”割肝救子 母子恢复情况良好(图).txt");
+        Article DC=fileService.readFile("F:\\z\\1160010012.pdf");
         //比对文件集合
 //        List<Article> BDes=fileService.readFilesInDir("E:\\test\\compare");
 //        List<Article> BDes=fileService.readFilesInDir("E:\\JJW_2016\\JJW_2016\\1");
-        List<Article> BDes=fileService.readFilesInDir("D:\\迅雷下载\\Word2Vec结果\\Word2Vec结果\\语料\\腾讯新闻\\Tencent_news_Result\\Tencent_news_Result");
+        List<Article> BDes=fileService.readFilesInDir("F:\\zz");
 
         long end = System.currentTimeMillis();
         long diff= end - start;
 
-//        System.out.println("---读取文件耗时:" + diff + "ms");
-//        System.out.println("---文件数量:" + BDes.size());
+        System.out.println("---读取文件耗时:" + diff + "ms");
+        System.out.println("---文件数量:" + BDes.size());
 
         //==========================2Shingle==============================
 
@@ -69,7 +66,7 @@ public class Start {
         end = System.currentTimeMillis();
         diff= end - start;
 
-//        System.out.println("---计算shingle耗时:" + diff + "ms");
+        System.out.println("---计算shingle耗时:" + diff + "ms");
 
         //==========================MH==============================
 
@@ -85,7 +82,7 @@ public class Start {
         end = System.currentTimeMillis();
         diff= end - start;
 
-//        System.out.println("---获取MH耗时:" + diff + "ms");
+        System.out.println("---获取MH耗时:" + diff + "ms");
 
         //==========================One Permutation Hash==============================
 
@@ -101,7 +98,7 @@ public class Start {
         end = System.currentTimeMillis();
         diff= end - start;
 
-//        System.out.println("---获取OPM耗时:" + diff + "ms");
+        System.out.println("---获取OPM耗时:" + diff + "ms");
 
         //===========================计算MH===========================
 
@@ -114,9 +111,10 @@ public class Start {
         for(int i = 0; i < BDes.size(); i++) {
             Article BDArticle=BDes.get(i);
             float xsl = calculateService.calcXlsOfMinhash(DC.getMinHash(), BDArticle.getMinHash());
-//            System.out.println(xsl);
+            System.out.println(xsl);
             if(xsl > T) {
                 MHFile.add(BDArticle.getFilePath());
+//                System.out.println(BDArticle.getFilePath());
             }
         }
 
@@ -142,7 +140,6 @@ public class Start {
 
         end = System.currentTimeMillis();
         diff= end - start;
-
         System.out.println("---计算OPH耗时:" + diff + "ms");
 
         //过滤
@@ -166,10 +163,15 @@ public class Start {
         List<String> MHFFile = new ArrayList<String>();
 
         for(int i=0; i<observationPoints.size(); i++) {
-            int k = observationPoints.get(i);
+            int k = observationPoints.get(0);
+
+//            long a1=System.currentTimeMillis();
 
             double tmpTU = filterService.getUpper(k, 1, e);
             double tmpTL = filterService.getLower(k, T, e);
+
+//            long a2=System.currentTimeMillis();
+//            System.out.println("---MH过滤计算耗时:单次计算上下阈值" + (a2-a1) + "ms");
 
             for(int j=0; j<BDes.size(); j++) {
                 Article BDArticle=BDes.get(j);
@@ -187,11 +189,13 @@ public class Start {
                     }
                 }
             }
+
+//            long a3=System.currentTimeMillis();
+//            System.out.println("---MH过滤计算耗时:单次过滤" + (a3-a2) + "ms");
         }
 
         end = System.currentTimeMillis();
         diff= end - start;
-
         System.out.println("---MH过滤计算耗时:" + diff + "ms");
 
         //===========================OPH过滤===========================
@@ -203,6 +207,7 @@ public class Start {
             BDArticle.setFiltered(false);
         }
 
+        //===========================OPH过滤计算耗时===========================
         start = System.currentTimeMillis();
 
         for(int i=0; i<observationPoints.size(); i++) {
@@ -229,8 +234,48 @@ public class Start {
 
         end = System.currentTimeMillis();
         diff= end - start;
-
         System.out.println("---OPH过滤计算耗时:" + diff + "ms");
+
+
+        //===========================MH新过滤计算耗时===========================
+        HashMap<Integer,Double> TLMaps=new HashMap<Integer, Double>();
+        HashMap<Integer,Double> TUMps=new HashMap<Integer, Double>();
+        List<Double> TLList=Lists.newArrayList();
+        List<Double> TUList=Lists.newArrayList();
+
+        for(int i=0; i<observationPoints.size(); i++) {
+            int k = observationPoints.get(i);
+
+            double tmpTU = filterService.getUpper(k, 1, e);
+            TUList.add(tmpTU);
+            TUMps.put(k,tmpTU);
+            double tmpTL = filterService.getLower(k, T, e);
+            TLList.add(tmpTL);
+            TLMaps.put(k,tmpTL);
+        }
+
+        start = System.currentTimeMillis();
+        for(int j=0; j<BDes.size(); j++) {
+            Article BDArticle=BDes.get(j);
+            double xsl=filterService.filterMH(DC.getMinHash(), BDArticle.getMinHash(),observationPoints,TLMaps,TUMps);
+            System.out.println(xsl);
+        }
+        end = System.currentTimeMillis();
+        diff= end - start;
+        System.out.println("---MH新过滤计算耗时:" + diff + "ms");
+
+        //===========================MH新2过滤计算耗时(遍历过滤点模式)===========================
+        start = System.currentTimeMillis();
+
+        for(int j=0; j<BDes.size(); j++) {
+            Article BDArticle=BDes.get(j);
+            double xsl=filterService.filterMH(DC.getMinHash(), BDArticle.getMinHash(),observationPoints,TLList,TUList);
+            System.out.println(xsl);
+        }
+
+        end = System.currentTimeMillis();
+        diff= end - start;
+        System.out.println("---MH新过滤计算2耗时:" + diff + "ms");
 
 //        System.out.println("---MH结果:" + MHFile.size());
 //        System.out.println("---OPH结果:" + OPHFile.size());
